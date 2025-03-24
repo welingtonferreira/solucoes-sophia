@@ -1,0 +1,20 @@
+SELECT 
+    p.id_produto, 
+    p.nome_produto, 
+    p.preco_unitario, 
+    p.estoque_disponivel AS estoque_disponivel,  -- Estoque disponível atual
+    COALESCE(SUM(i.quantidade), 0) AS quantidade_saida,  -- Quantidade vendida
+    p.estoque_disponivel + COALESCE(SUM(i.quantidade), 0) AS estoque_anterior,  -- Estoque anterior
+    p.estoque_disponivel - COALESCE(SUM(i.quantidade), 0) AS estoque_atualizado  -- Estoque após a venda
+FROM 
+    produtos p
+LEFT JOIN 
+    itens_venda i ON p.id_produto = i.id_produto
+GROUP BY 
+    p.id_produto, p.nome_produto, p.preco_unitario, p.estoque_disponivel
+HAVING 
+    (COALESCE(SUM(i.quantidade), 0) > 0 OR :IgnorarProdutosSemSaida = 0)  -- Filtro: Ignorar produtos sem saída
+    AND (p.estoque_disponivel - COALESCE(SUM(i.quantidade), 0) > 0 OR :IgnorarProdutosComSaldoZerado = 0)  -- Filtro: Ignorar produtos com saldo zerado
+    AND (:ProdutoID = 9999 OR p.ID_PRODUTO = :ProdutoID)
+ORDER BY 
+    p.nome_produto;
