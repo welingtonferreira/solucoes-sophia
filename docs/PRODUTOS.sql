@@ -1,10 +1,8 @@
-CREATE TABLE PRODUTOS
-(
-     CODIGO INTEGER NOT NULL,
-     DESCRICAO VARCHAR(200) NOT NULL,
-     VALOR NUMERIC(18,2),
-     EXIGE_CONTROLE_ESPECIAL INTEGER DEFAULT 0,
-     CONSTRAINT PK_PRODUTOS PRIMARY KEY(CODIGO)
- );
-
-  CREATE SEQUENCE GEN_CODIGOPRODUTO;
+CREATE TABLE `produtos` (
+  `id_produto` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_produto` varchar(255) NOT NULL,
+  `preco_unitario` decimal(10,2) NOT NULL,
+  `estoque_disponivel` int(11) DEFAULT '0',
+  PRIMARY KEY (`id_produto`),
+  UNIQUE KEY `uq_produto_nome` (`nome_produto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
