@@ -45,11 +45,11 @@ procedure TfrmSobre.FormCreate(Sender: TObject);
 begin
   inherited;
 
-  lblVersaoSistema.Caption      := '2025-03-20 - 0.0.0.1';
+  lblVersaoSistema.Caption      := '2025-04-08 - 0.0.0.1';
   lblAtualizacaoSistema.Caption := DateToStr(Date);
 
-  lblLayOutBanco.Caption      := 'MYSQL 5.7.44';
-  lblAtualizacaoBanco.Caption := '2022';
+  lblLayOutBanco.Caption      := 'SQL Server 2019';
+  lblAtualizacaoBanco.Caption := '2025';
 end;
 
 end.
