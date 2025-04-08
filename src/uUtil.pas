@@ -23,6 +23,10 @@ const
   Pesos2: array[1..13] of Integer = (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
 
 procedure OrdenaGrid(Grid: TDBGrid; Coluna: TColumn; Table: String = ''; Complement: String = ''; OrderBy: String = ''; Linha: Integer = 0);
+//para usar SQL SERVER
+procedure ConfigurarConexao(FDConnection: TFDConnection; const ArquivoIni: String);
+procedure SalvarConfiguracao(const ArquivoIni: String; const DriverID, Database, Server, UserName, Password, Trusted, Encrypt, TrustServerCertificate, OSAuthent: String);
+
 function ValidarEstoqueParaVenda(idProduto: Integer; quantidadeVenda: Integer): Boolean;
 function ValidarCNPJ(const CNPJ: string): Boolean;
 function ValidarCPF(const CPF: string): Boolean;
@@ -34,6 +38,7 @@ function ValidarData(DataStr: string): TDateTime;
 function TratarErroBanco(Erro: Exception): String;
 function CarregarCaminhoRelatorio: string;
 function RightStr(const S: string; Length: Integer): string;
+function CarregarCaminhoConfigBD: string;
 
 var
   GLOBAL_USER: TUsuario;
@@ -174,12 +179,12 @@ end;
 
 function MsgBox(Texto: String; Flags: LongInt): Integer;
 begin
-  Result := Application.MessageBox(PWideChar(Texto), PWideChar('SisMaster'), Flags);
+  Result := Application.MessageBox(PWideChar(Texto), PWideChar('Soluções Sophia'), Flags);
 end;
 
 function MsgBox(Controle: HWND; Texto: String; Flags: LongInt): Integer;
 begin
-  Result := MessageBox(Controle, PWideChar(Texto), PWideChar('SisMaster'), Flags);
+  Result := MessageBox(Controle, PWideChar(Texto), PWideChar('Soluções Sophia'), Flags);
 end;
 
 function RemoverFormatoCPF_CNPJ(const Texto: string): string;
@@ -330,6 +335,11 @@ begin
           // Caso o caminho não exista, exibe a mensagem
           MsgBox('"Prezado Cliente"'#13'Caminho dos relatórios parametrizados não existe, acesse "Cadastros -> Parâmetros Sistemas".', MB_OK + MB_ICONINFORMATION);
         end;
+      end
+      else
+      begin
+         MsgBox('"Prezado Cliente"'#13'Caminho dos relatórios parametrizados não existe, acesse "Cadastros -> Parâmetros Sistemas".', MB_OK + MB_ICONINFORMATION);
+         Exit;
       end;
     finally
       vQuery.Free;
@@ -349,5 +359,202 @@ begin
   else
     Result := '';  // Caso o comprimento seja inválido, retorna uma string vazia
 end;
+
+procedure ConfigurarConexao(FDConnection: TFDConnection; const ArquivoIni: string);
+var
+  Ini: TIniFile;
+  Trusted: String;
+  DriverID, Database, Server, UserName, Password, Encrypt, TrustServerCertificate, OSAuthent: String;
+  CaminhoAtual, CaminhoBase, CaminhoDesejado: String;
+  NiveisParaSubir, i: Integer;
+begin
+
+  // Verifica se o arquivo .ini existe
+  if not FileExists(ArquivoIni) then
+  begin
+    SalvarConfiguracao(ArquivoIni, 'MSSQL', 'SOPHIA', 'localhost\SQLEXPRESS', '', '', 'Yes', 'No', 'Yes', 'Yes');
+    MsgBox('"Prezado Cliente"'#13'Arquivo de configuração criado com valores padrão. Por favor, configure o arquivo antes de continuar.', MB_OK + MB_ICONINFORMATION);
+    Application.Terminate;
+  end;
+
+  Ini := TIniFile.Create(ArquivoIni);
+  try
+    // Lê os parâmetros do arquivo .ini
+    DriverID  := Ini.ReadString('Database', 'DriverID', 'MSSQL');
+    Database  := Ini.ReadString('Database', 'Database', '');
+    Server    := Ini.ReadString('Database', 'Server', '');
+    UserName  := Ini.ReadString('Database', 'UserName', '');
+    Password  := Ini.ReadString('Database', 'Password', '');
+    Trusted   := Ini.ReadString('Database', 'Trusted_Connection', '');
+    Encrypt   := Ini.ReadString('Database', 'Encrypt', '');
+    OSAuthent := Ini.ReadString('Database', 'OSAuthent', '');
+    TrustServerCertificate := Ini.ReadString('Database', 'TrustServerCertificate', '');
+
+    // Limpa os parâmetros existentes
+    FDConnection.Params.Clear;
+
+    // Adiciona os parâmetros básicos
+    FDConnection.Params.DriverID := DriverID;
+    FDConnection.Params.Database := Database;
+    FDConnection.Params.Add('Server=' + Server);
+    FDConnection.Params.Add('Encrypt=' + Encrypt);
+    FDConnection.Params.Add('TrustServerCertificate=' + TrustServerCertificate);
+    FDConnection.Params.Add('OSAuthent=' + OSAuthent);
+
+    // Configura autenticação
+    if SameText(Trusted, 'Yes') then
+    begin
+      FDConnection.Params.Add('Trusted_Connection=Yes');
+    end
+    else
+    begin
+      FDConnection.Params.UserName := UserName;
+      FDConnection.Params.Password := Password;
+      FDConnection.Params.Add('Trusted_Connection=No');
+    end;
+
+    // Evita prompts para login
+    FDConnection.LoginPrompt := False;
+
+    // Tenta conectar
+    try
+      FDConnection.Connected := True;
+      ShowMessage('Conexão estabelecida com sucesso!');
+    except
+      on E: Exception do
+      begin
+        MsgBox('"Prezado Cliente"'#13'Erro ao conectar ao banco de dados: ' + E.Message + sLineBreak +
+                    'Por favor, configure o arquivo .ini corretamente.', MB_OK + MB_ICONERROR);
+        Application.Terminate;
+      end;
+    end;
+  finally
+    Ini.Free;
+  end;
+end;
+
+procedure SalvarConfiguracao(const ArquivoIni: String; const DriverID, Database, Server, UserName, Password, Trusted, Encrypt, TrustServerCertificate, OSAuthent: String);
+var
+  Ini: TIniFile;
+begin
+  Ini := TIniFile.Create(ArquivoIni);
+  try
+    // Grava os parâmetros no arquivo .ini
+    Ini.WriteString('Database', 'DriverID', DriverID);
+    Ini.WriteString('Database', 'Database', Database);
+    Ini.WriteString('Database', 'Server', Server);
+    Ini.WriteString('Database', 'UserName', UserName);
+    Ini.WriteString('Database', 'Password', Password);
+    Ini.WriteString('Database', 'Trusted_Connection', Trusted);
+    Ini.WriteString('Database', 'Encrypt', Encrypt);
+    Ini.WriteString('Database', 'TrustServerCertificate', TrustServerCertificate);
+    Ini.WriteString('Database', 'OSAuthent', OSAuthent);
+  finally
+    Ini.Free;
+  end;
+end;
+
+function CarregarCaminhoConfigBD: string;
+var
+  vQuery: TFDQuery;
+  CaminhoConfigBD: string;
+  OpenDialog: TOpenDialog;
+begin
+  Result := ''; // Retorna vazio se não encontrar ou ocorrer erro
+  try
+    // Cria a query dinamicamente
+    vQuery := TFDQuery.Create(nil);
+    try
+      vQuery.Connection := DMPrincipal.FireDacCon; // FDConnection configurado
+
+      // Verifica se o parâmetro existe
+      vQuery.Close;
+      vQuery.SQL.Clear;
+      vQuery.SQL.Text := 'SELECT CaminhoConfigBD FROM parametros';
+      vQuery.Open;
+
+      if not vQuery.IsEmpty then
+      begin
+        // Se existir, obtém o caminho
+        CaminhoConfigBD := vQuery.FieldByName('CaminhoConfigBD').AsString;
+
+        // Se estiver vazio, solicita ao usuário para selecionar o caminho
+        if CaminhoConfigBD.Trim.IsEmpty then
+        begin
+          OpenDialog := TOpenDialog.Create(nil);
+          try
+            OpenDialog.Title := 'Selecione o arquivo de configuração';
+            OpenDialog.Filter := 'Arquivos de Configuração (*.ini;*.conf)|*.ini;*.conf|Todos os Arquivos (*.*)|*.*';
+            OpenDialog.Options := [ofFileMustExist, ofHideReadOnly];
+
+            if OpenDialog.Execute then
+            begin
+              CaminhoConfigBD := OpenDialog.FileName;
+
+              // Atualiza o valor no banco de dados
+              vQuery.Close;
+              vQuery.SQL.Clear;
+              vQuery.SQL.Text := 'UPDATE parametros SET CaminhoConfigBD = :NovoCaminho';
+              vQuery.ParamByName('NovoCaminho').AsString := CaminhoConfigBD;
+              vQuery.ExecSQL;
+
+              Result := CaminhoConfigBD; // Retorna o novo caminho
+            end
+            else
+            begin
+              MsgBox('"Prezado Cliente"'#13'Nenhum arquivo foi selecionado. A operação será encerrada.', MB_OK + MB_ICONINFORMATION);
+            end;
+          finally
+            OpenDialog.Free;
+          end;
+        end
+        else
+        begin
+          Result := CaminhoConfigBD; // Retorna o caminho existente
+        end;
+      end
+      else
+      begin
+        MsgBox('"Prezado Cliente"'#13'Não encontramos o caminho do arquivo de configuração do banco de dados. Por gentileza, selecione o arquivo .INI para salvar.', MB_OK + MB_ICONINFORMATION);
+        OpenDialog := TOpenDialog.Create(nil);
+        try
+          OpenDialog.Title := 'Selecione o arquivo de configuração';
+          OpenDialog.Filter := 'Arquivos de Configuração (*.ini;)|*.ini;|Todos os Arquivos (*.*)|*.*';
+          OpenDialog.Options := [ofFileMustExist, ofHideReadOnly];
+
+          if OpenDialog.Execute then
+          begin
+            CaminhoConfigBD := OpenDialog.FileName;
+
+            // Insere o valor no banco de dados
+            vQuery.Close;
+            vQuery.SQL.Clear;
+            vQuery.SQL.Text := 'INSERT INTO parametros (CaminhoConfigBD) VALUES (:NovoCaminho)';
+            vQuery.ParamByName('NovoCaminho').AsString := CaminhoConfigBD;
+            vQuery.ExecSQL;
+
+            Result := CaminhoConfigBD; // Retorna o novo caminho
+          end
+          else
+          begin
+            MsgBox('"Prezado Cliente"'#13'Nenhum arquivo foi selecionado. A operação será encerrada.', MB_OK + MB_ICONINFORMATION);
+          end;
+        finally
+          OpenDialog.Free;
+        end;
+      end;
+    finally
+      vQuery.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      MsgBox('"Prezado Cliente"'#13'Erro ao carregar ou salvar o caminho de configuração do banco de dados: ' + E.Message, MB_OK + MB_ICONERROR);
+    end;
+  end;
+end;
+
+
+
 
 end.

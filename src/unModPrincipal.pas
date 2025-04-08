@@ -10,7 +10,7 @@ uses
   FireDAC.Comp.UI, FireDAC.Phys.IBBase, Vcl.Dialogs, Vcl.Forms,
   Winapi.Windows, Winapi.Messages, Vcl.Graphics, Vcl.Controls, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.Imaging.jpeg, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.ComCtrls, FireDAC.Phys.MySQL,
-  FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Error;
+  FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Error, FireDAC.Phys.MSSQL, FireDAC.Phys.MSSQLDef, FireDAC.Phys.ODBCBase;
 
   procedure AplicarDados(Query: TFDQuery);
   procedure CommitRFD;
@@ -28,7 +28,7 @@ type
     FireDacCon: TFDConnection;
     FireTransCon: TFDTransaction;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
-    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    FDPhysMSSQLDriverLink1: TFDPhysMSSQLDriverLink;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -75,8 +75,7 @@ end;
 
 function GetIDGen: Integer;
 begin
-  with consultarDbFD('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = '
-                      + QuotedStr('vendas') + ' AND table_schema = ' + QuotedStr('sismaster'), []) do
+  with consultarDbFD('SELECT IDENT_CURRENT(' + QuotedStr('vendas') + ') + 1', []) do
   begin
     Result := Fields[0].AsInteger;
     Free;
@@ -274,9 +273,31 @@ end;
 //'bin\LIBMYSQL.DLL'
 procedure TDMPrincipal.DataModuleCreate(Sender: TObject);
 var
-  CaminhoAtual, CaminhoBase, CaminhoDesejado: string;
+  CaminhoAtual, CaminhoBase, CaminhoDesejado, CaminhoBD: string;
   NiveisParaSubir, i: Integer;
 begin
+//  // Caminho inicial (simulando o padrão informado)
+//  CaminhoAtual := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
+//
+//  // Número de níveis que deseja subir
+//  NiveisParaSubir := 4;
+//
+//  // Subir os níveis
+//  CaminhoBase := CaminhoAtual;
+//  for i := 1 to NiveisParaSubir do
+//  begin
+//    CaminhoBase := ExtractFileDir(CaminhoBase);
+//  end;
+//
+//  // Adicionar o subdiretório "bin"
+//  CaminhoDesejado := IncludeTrailingPathDelimiter(CaminhoBase) + 'bin';
+//
+//  // Exibir o resultado
+//  if DirectoryExists(CaminhoDesejado) then
+//    FDPhysMySQLDriverLink1.VendorLib := CaminhoDesejado + '\LIBMYSQL.DLL'
+//  else
+//    ShowMessage('Pasta "bin" não encontrada no caminho: ' + CaminhoDesejado + '\LIBMYSQL.DLL');
+
   // Caminho inicial (simulando o padrão informado)
   CaminhoAtual := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
 
@@ -290,14 +311,17 @@ begin
     CaminhoBase := ExtractFileDir(CaminhoBase);
   end;
 
-  // Adicionar o subdiretório "bin"
-  CaminhoDesejado := IncludeTrailingPathDelimiter(CaminhoBase) + 'bin';
+  // Adicionar o subdiretório "data"
+  CaminhoDesejado := IncludeTrailingPathDelimiter(CaminhoBase) + 'data\bd.ini';
+  if not FileExists(CaminhoDesejado) then
+  begin
+    SalvarConfiguracao(CaminhoDesejado, 'MSSQL', 'SOPHIA', 'localhost\SQLEXPRESS', '', '', 'Yes', 'No', 'Yes', 'Yes');
+    MsgBox('"Prezado Cliente"'#13'Arquivo de configuração criado com valores padrão. Por favor, configure o arquivo antes de continuar.', MB_OK + MB_ICONINFORMATION);
+  end;
 
-  // Exibir o resultado
-  if DirectoryExists(CaminhoDesejado) then
-    FDPhysMySQLDriverLink1.VendorLib := CaminhoDesejado + '\LIBMYSQL.DLL'
-  else
-    ShowMessage('Pasta "bin" não encontrada no caminho: ' + CaminhoDesejado + '\LIBMYSQL.DLL');
+  CaminhoBD := CarregarCaminhoConfigBD;
+  ConfigurarConexao(FireDacCon, CaminhoBD)
+
 end;
 
 end.

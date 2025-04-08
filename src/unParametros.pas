@@ -16,13 +16,19 @@ type
     edtCaminhoPasta: TEdit;
     Label1: TLabel;
     btnConsCaminho: TSpeedButton;
+    Label2: TLabel;
+    btnConsCaminhoINI: TSpeedButton;
+    edtCaminhoINI: TEdit;
     procedure btnConsCaminhoClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure btnConsCaminhoINIClick(Sender: TObject);
   private
     procedure CarregarCaminhoRelatorio;
     procedure SalvarCaminhoRelatorio;
+    procedure CarregarCaminhoConfigBD;
+    procedure SalvarCaminhoConfigBD;
     { Private declarations }
   public
     { Public declarations }
@@ -46,6 +52,7 @@ end;
 procedure TfrmParametros.btnConfirmarClick(Sender: TObject);
 begin
   SalvarCaminhoRelatorio;
+  SalvarCaminhoConfigBD;
 end;
 
 procedure TfrmParametros.btnConsCaminhoClick(Sender: TObject);
@@ -59,6 +66,29 @@ begin
     edtCaminhoPasta.Text := CaminhoPasta;
   end;
 end;
+
+procedure TfrmParametros.btnConsCaminhoINIClick(Sender: TObject);
+var
+  OpenDialog: TOpenDialog;
+begin
+  // Cria o diálogo de seleção de arquivo
+  OpenDialog := TOpenDialog.Create(nil);
+  try
+    OpenDialog.Title := 'Selecione o arquivo de configuração (.ini)';
+    OpenDialog.Filter := 'Arquivos INI (*.ini)|*.ini|Todos os Arquivos (*.*)|*.*';
+    OpenDialog.DefaultExt := 'ini';
+    OpenDialog.Options := [ofFileMustExist, ofHideReadOnly];
+
+    // Exibe o diálogo e obtém o caminho selecionado
+    if OpenDialog.Execute then
+    begin
+      edtCaminhoINI.Text := OpenDialog.FileName; // Define o caminho selecionado no TEdit
+    end;
+  finally
+    OpenDialog.Free; // Libera o diálogo após uso
+  end;
+end;
+
 
 procedure TfrmParametros.CarregarCaminhoRelatorio;
 var
@@ -97,18 +127,22 @@ begin
   end;
 end;
 
-
 procedure TfrmParametros.FormShow(Sender: TObject);
 begin
   edtCaminhoPasta.TextHint := 'Selecione o caminho dos relatórios fastReport (*.fr3).';
   edtCaminhoPasta.ReadOnly := True;  // Deixar o Edit apenas leitura
   // Chama o método para carregar o caminho do relatório ao abrir a tela
   CarregarCaminhoRelatorio;
+
+  edtCaminhoINI.TextHint := 'Selecione o caminho do banco de dados (*.ini).';
+  edtCaminhoINI.ReadOnly := True;  // Deixar o Edit apenas leitura
+  // Chama o método para carregar o caminho do relatório ao abrir a tela
+  CarregarCaminhoConfigBD;
 end;
 
 procedure TfrmParametros.SalvarCaminhoRelatorio;
 var
-  CaminhoPasta: string;
+  CaminhoPasta, CaminhoPastaINI: String;
   vQuery: TFDQuery;
 begin
   try
@@ -129,10 +163,12 @@ begin
       vQuery.Connection := DMPrincipal.FireDacCon;
 
       // Verifica se já existe um caminho cadastrado
-      vQuery.SQL.Text := 'SELECT COUNT(*) FROM parametros';
+      vQuery.Close;
+      vQuery.SQL.Clear;
+      vQuery.SQL.Text := 'SELECT CaminhoRelatorio FROM parametros';
       vQuery.Open;
 
-      if vQuery.Fields[0].AsInteger > 0 then
+      if not vQuery.IsEmpty then
       begin
         // Se já existe um caminho, faz um UPDATE
         vQuery.Close;
@@ -148,9 +184,9 @@ begin
         vQuery.ParamByName('CaminhoRelatorio').AsString := CaminhoPasta;
         vQuery.ExecSQL;
       end;
-
       CommitRFD;
-      MsgBox('"Prezado Cliente"'#13'Caminho do relatório atualizado com sucesso.', MB_OK + MB_ICONINFORMATION);
+
+      MsgBox('"Prezado Cliente"'#13'Parametros atualizado com sucesso.', MB_OK + MB_ICONINFORMATION);
 
     finally
       vQuery.Free;
@@ -163,6 +199,108 @@ begin
     end;
   end;
 end;
+
+procedure TfrmParametros.CarregarCaminhoConfigBD;
+var
+  vQuery: TFDQuery;
+  CaminhoConfigBD: string;
+begin
+  try
+    // Cria a query dinamicamente
+    vQuery := TFDQuery.Create(nil);
+    try
+      vQuery.Connection := DMPrincipal.FireDacCon;
+
+      // Verifica se já existe um caminho cadastrado
+      vQuery.Close;
+      vQuery.SQL.Clear;
+      vQuery.SQL.Text := 'SELECT CaminhoConfigBD FROM parametros';
+      vQuery.Open;
+
+      if not vQuery.IsEmpty then
+      begin
+        // Se existir, carrega o caminho no TEdit
+        CaminhoConfigBD := vQuery.FieldByName('CaminhoConfigBD').AsString;
+        edtCaminhoINI.Text := CaminhoConfigBD;
+      end
+      else
+      begin
+        // Caso não exista, você pode informar ao usuário ou deixar o campo em branco
+        edtCaminhoINI.Clear;
+      end;
+    finally
+      vQuery.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      MsgBox('"Prezado Cliente"'#13'Erro ao carregar o caminho de configuração do banco de dados: ' + E.Message, MB_OK + MB_ICONERROR);
+    end;
+  end;
+end;
+
+procedure TfrmParametros.SalvarCaminhoConfigBD;
+var
+  CaminhoBD: String;
+  vQuery: TFDQuery;
+begin
+  try
+    // Obtém o caminho do banco de dados do TEdit
+    CaminhoBD := Trim(edtCaminhoINI.Text);
+
+    // Verifica se o caminho foi informado
+    if CaminhoBD = EmptyStr then
+    begin
+      MsgBox('"Prezado Cliente"'#13'O caminho do banco de dados não pode estar vazio.', MB_OK + MB_ICONINFORMATION);
+      Exit;
+    end;
+
+    // Cria a query dinamicamente
+    vQuery := TFDQuery.Create(nil);
+    DMPrincipal.FireTransCon.StartTransaction;
+    try
+      vQuery.Connection := DMPrincipal.FireDacCon;
+
+      // Verifica se já existe um caminho cadastrado
+      vQuery.Close;
+      vQuery.SQL.Clear;
+      vQuery.SQL.Text := 'SELECT CaminhoConfigBD FROM parametros';
+      vQuery.Open;
+
+      if not vQuery.IsEmpty then
+      begin
+        // Se já existe um caminho, faz um UPDATE
+        vQuery.Close;
+        vQuery.SQL.Text := 'UPDATE parametros SET CaminhoConfigBD = :CaminhoConfigBD';
+        vQuery.ParamByName('CaminhoConfigBD').AsString := CaminhoBD;
+        vQuery.ExecSQL;
+      end
+      else
+      begin
+        // Se não existe, faz um INSERT
+        vQuery.Close;
+        vQuery.SQL.Text := 'INSERT INTO parametros (CaminhoConfigBD) VALUES (:CaminhoConfigBD)';
+        vQuery.ParamByName('CaminhoConfigBD').AsString := CaminhoBD;
+        vQuery.ExecSQL;
+      end;
+
+      DMPrincipal.FireTransCon.Commit;
+
+      MsgBox('"Prezado Cliente"'#13'O caminho do banco de dados foi atualizado com sucesso.', MB_OK + MB_ICONINFORMATION);
+
+    finally
+      vQuery.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      MsgBox('"Prezado Cliente"'#13'Erro ao salvar o caminho do banco de dados: ' + E.Message, MB_OK + MB_ICONEXCLAMATION);
+      DMPrincipal.FireTransCon.Rollback;
+    end;
+  end;
+end;
+
+
 
 
 end.

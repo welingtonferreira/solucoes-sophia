@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.Imaging.jpeg, Vcl.ExtCtrls, DateUtils, Vcl.ComCtrls, Data.DB, Vcl.Grids,
   Vcl.DBGrids, Vcl.DBCGrids, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, SqlTimSt;
 
 type
   TfrmPedidosVenda0 = class(TForm)
@@ -144,7 +144,7 @@ begin
 
           frmPedidosVenda1.edtCodigo.Text := dtSelecoes.ConsVendasID_CLIENTE.AsString;
           frmPedidosVenda1.edtNome.Text := dtSelecoes.ConsVendasNOME_COMPLETO.AsString;
-          frmPedidosVenda1.edtDataVenda.Date := dtSelecoes.ConsVendasDATA_VENDA.Value;
+          frmPedidosVenda1.edtDataVenda.Date := SQLTimeStampToDateTime(dtSelecoes.ConsVendasDATA_VENDA.Value);
           frmPedidosVenda1.edtValor.Text := FormatFloat('#,##0.00', dtSelecoes.ConsVendasTOTAL_VENDA.AsFloat);
 
           frmPedidosVenda1.bAlterando := True;

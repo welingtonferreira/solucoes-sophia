@@ -712,35 +712,6 @@ object frmRelListaProdutosVendidos: TfrmRelListaProdutosVendidos
     DataSetOptions = []
     Left = 369
     Top = 9
-    FieldDefs = <
-      item
-        FieldName = 'ID_PRODUTO'
-      end
-      item
-        FieldName = 'NOME_PRODUTO'
-        FieldType = fftString
-        Size = 255
-      end
-      item
-        FieldName = 'NUM_VENDAS'
-      end
-      item
-        FieldName = 'QUANTIDADE_VENDIDA'
-      end
-      item
-        FieldName = 'VALOR_TOTAL'
-      end
-      item
-        FieldName = 'PRIMEIRA_VENDA'
-        FieldType = fftDateTime
-      end
-      item
-        FieldName = 'ULTIMA_VENDA'
-        FieldType = fftDateTime
-      end
-      item
-        FieldName = 'PRECO_UNITARIO'
-      end>
   end
   object Produtos: TFDQuery
     Connection = DMPrincipal.FireDacCon
@@ -765,7 +736,7 @@ object frmRelListaProdutosVendidos: TfrmRelListaProdutosVendidos
       ' JOIN Vendas v ON iv.ID_VENDA = v.ID_VENDA    '
       'WHERE v.DATA_VENDA BETWEEN :DataInicio AND :DataFim'
       '  AND (:Produto = 9999 OR iv.ID_PRODUTO = :Produto)'
-      'GROUP BY p.ID_PRODUTO, p.NOME_PRODUTO'
+      'GROUP BY p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO_UNITARIO'
       
         'ORDER BY ID_PRODUTO DESC;  -- Ordenar pela quantidade vendida, d' +
         'o maior para o menor')
@@ -795,40 +766,11 @@ object frmRelListaProdutosVendidos: TfrmRelListaProdutosVendidos
       Origin = 'ID_PRODUTO'
       ReadOnly = True
     end
-    object ProdutosNOME_PRODUTO: TStringField
+    object ProdutosNOME_PRODUTO: TWideStringField
       FieldName = 'NOME_PRODUTO'
       Origin = 'NOME_PRODUTO'
       Required = True
       Size = 255
-    end
-    object ProdutosNUM_VENDAS: TLargeintField
-      AutoGenerateValue = arDefault
-      FieldName = 'NUM_VENDAS'
-      Origin = 'NUM_VENDAS'
-    end
-    object ProdutosQUANTIDADE_VENDIDA: TFMTBCDField
-      AutoGenerateValue = arDefault
-      FieldName = 'QUANTIDADE_VENDIDA'
-      Origin = 'QUANTIDADE_VENDIDA'
-      Precision = 32
-      Size = 0
-    end
-    object ProdutosVALOR_TOTAL: TFMTBCDField
-      AutoGenerateValue = arDefault
-      FieldName = 'VALOR_TOTAL'
-      Origin = 'VALOR_TOTAL'
-      Precision = 32
-      Size = 2
-    end
-    object ProdutosPRIMEIRA_VENDA: TDateTimeField
-      AutoGenerateValue = arDefault
-      FieldName = 'PRIMEIRA_VENDA'
-      Origin = 'PRIMEIRA_VENDA'
-    end
-    object ProdutosULTIMA_VENDA: TDateTimeField
-      AutoGenerateValue = arDefault
-      FieldName = 'ULTIMA_VENDA'
-      Origin = 'ULTIMA_VENDA'
     end
     object ProdutosPRECO_UNITARIO: TBCDField
       FieldName = 'PRECO_UNITARIO'
@@ -837,6 +779,34 @@ object frmRelListaProdutosVendidos: TfrmRelListaProdutosVendidos
       DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
+    end
+    object ProdutosNUM_VENDAS: TIntegerField
+      FieldName = 'NUM_VENDAS'
+      Origin = 'NUM_VENDAS'
+      ReadOnly = True
+    end
+    object ProdutosQUANTIDADE_VENDIDA: TIntegerField
+      FieldName = 'QUANTIDADE_VENDIDA'
+      Origin = 'QUANTIDADE_VENDIDA'
+      ReadOnly = True
+    end
+    object ProdutosVALOR_TOTAL: TFMTBCDField
+      FieldName = 'VALOR_TOTAL'
+      Origin = 'VALOR_TOTAL'
+      ReadOnly = True
+      DisplayFormat = '#,##0.00'
+      Precision = 38
+      Size = 2
+    end
+    object ProdutosPRIMEIRA_VENDA: TSQLTimeStampField
+      FieldName = 'PRIMEIRA_VENDA'
+      Origin = 'PRIMEIRA_VENDA'
+      ReadOnly = True
+    end
+    object ProdutosULTIMA_VENDA: TSQLTimeStampField
+      FieldName = 'ULTIMA_VENDA'
+      Origin = 'ULTIMA_VENDA'
+      ReadOnly = True
     end
   end
   object frxPDFExport1: TfrxPDFExport

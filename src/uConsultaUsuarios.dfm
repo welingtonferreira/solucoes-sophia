@@ -252,68 +252,62 @@ object frmConsultaUsuarios: TfrmConsultaUsuarios
       
         'SELECT ID, NOME, CPF, RG, EMAIL, CEL, TEL, LOGIN, SENHA, ADMINIS' +
         'TRADOR'
-      '  FROM USER')
+      '  FROM [USER]')
     Left = 198
     Top = 320
     object qryConsUsuariosID: TFDAutoIncField
       FieldName = 'ID'
-      Origin = 'id'
+      Origin = 'ID'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object qryConsUsuariosNOME: TStringField
+    object qryConsUsuariosNOME: TWideStringField
       FieldName = 'NOME'
-      Origin = 'nome'
+      Origin = 'NOME'
       Required = True
       Size = 100
     end
     object qryConsUsuariosCPF: TStringField
-      AutoGenerateValue = arDefault
       FieldName = 'CPF'
-      Origin = 'cpf'
+      Origin = 'CPF'
       FixedChar = True
       Size = 11
     end
-    object qryConsUsuariosRG: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsUsuariosRG: TWideStringField
       FieldName = 'RG'
-      Origin = 'rg'
+      Origin = 'RG'
     end
-    object qryConsUsuariosEMAIL: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsUsuariosEMAIL: TWideStringField
       FieldName = 'EMAIL'
-      Origin = 'email'
+      Origin = 'EMAIL'
       Size = 100
     end
-    object qryConsUsuariosCEL: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsUsuariosCEL: TWideStringField
       FieldName = 'CEL'
-      Origin = 'cel'
+      Origin = 'CEL'
       Size = 15
     end
-    object qryConsUsuariosTEL: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsUsuariosTEL: TWideStringField
       FieldName = 'TEL'
-      Origin = 'tel'
+      Origin = 'TEL'
       Size = 15
     end
-    object qryConsUsuariosLOGIN: TStringField
+    object qryConsUsuariosLOGIN: TWideStringField
       FieldName = 'LOGIN'
-      Origin = 'login'
+      Origin = 'LOGIN'
       Required = True
       Size = 50
     end
-    object qryConsUsuariosSENHA: TStringField
+    object qryConsUsuariosSENHA: TWideStringField
       FieldName = 'SENHA'
-      Origin = 'senha'
+      Origin = 'SENHA'
       Required = True
       Size = 100
     end
     object qryConsUsuariosADMINISTRADOR: TBooleanField
-      AutoGenerateValue = arDefault
       FieldName = 'ADMINISTRADOR'
-      Origin = 'administrador'
-      DisplayValues = '1;0'
+      Origin = 'ADMINISTRADOR'
+      Required = True
     end
   end
 end

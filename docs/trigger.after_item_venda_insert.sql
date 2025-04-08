@@ -1,28 +1,30 @@
-DELIMITER $$
-
 CREATE TRIGGER after_item_venda_insert
-AFTER INSERT ON itens_venda
-FOR EACH ROW
+ON itens_venda
+AFTER INSERT
+AS
 BEGIN
-    DECLARE estoque_atual INT;
+    DECLARE @estoque_atual INT;
+    DECLARE @id_produto INT;
+    DECLARE @quantidade INT;
 
-    -- Atualiza o estoque do produto
+    -- Obter os valores inseridos
+    SELECT @id_produto = id_produto, @quantidade = quantidade
+    FROM inserted;
+
+    -- Atualizar o estoque do produto
     UPDATE produtos
-    SET estoque_disponivel = estoque_disponivel - NEW.quantidade
-    WHERE id_produto = NEW.id_produto;
+    SET estoque_disponivel = estoque_disponivel - @quantidade
+    WHERE id_produto = @id_produto;
 
     -- Obter o saldo atual do estoque
-    SELECT estoque_disponivel INTO estoque_atual
+    SELECT @estoque_atual = estoque_disponivel
     FROM produtos
-    WHERE id_produto = NEW.id_produto;
+    WHERE id_produto = @id_produto;
 
     -- Verificar se o estoque ficou negativo
-    IF estoque_atual < 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Estoque insuficiente para o produto!';
-    END IF;
-END$$
-
-DELIMITER ;
-
-
+    IF @estoque_atual < 0
+    BEGIN
+        RAISERROR ('Estoque insuficiente para o produto!', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;

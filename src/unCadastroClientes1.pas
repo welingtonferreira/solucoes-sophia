@@ -75,12 +75,15 @@ end;
 
 procedure TfrmCadastroClientes1.btnCancelarClick(Sender: TObject);
 begin
+  if DMPrincipal.FireDacCon.InTransaction then
+    RollBackRFD;
+
   with dtCadastros do
   begin
     Clientes.Cancel;
     Clientes.CancelUpdates;
   end;
-  RollBackRFD;
+
   Self.Cancelou := True;
   Fechar := True;
   Self.Close;
@@ -95,6 +98,9 @@ begin
     with dtCadastros do
     begin
       try
+        // Iniciar a transação
+        DMPrincipal.FireTransCon.StartTransaction;
+
         Clientes.Edit;
         ClientesNOME_COMPLETO.Value := edtNome.Text;
         ClientesCPF_CNPJ.Value := edtCPF.Text;

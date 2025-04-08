@@ -2,8 +2,8 @@ object frmPedidosVenda1: TfrmPedidosVenda1
   Left = 0
   Top = 0
   Caption = 'Venda de Produtos'
-  ClientHeight = 504
-  ClientWidth = 713
+  ClientHeight = 503
+  ClientWidth = 709
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,11 +18,11 @@ object frmPedidosVenda1: TfrmPedidosVenda1
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 713
+    Width = 709
     Height = 65
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 709
+    ExplicitWidth = 705
     object Image1: TImage
       Left = 7
       Top = 6
@@ -87,7 +87,7 @@ object frmPedidosVenda1: TfrmPedidosVenda1
       ParentFont = False
     end
     object btnGravar: TBitBtn
-      Left = 582
+      Left = 578
       Top = 1
       Width = 65
       Height = 63
@@ -171,10 +171,10 @@ object frmPedidosVenda1: TfrmPedidosVenda1
       Layout = blGlyphTop
       TabOrder = 0
       OnClick = btnGravarClick
-      ExplicitLeft = 578
+      ExplicitLeft = 574
     end
     object btnCancelar: TBitBtn
-      Left = 647
+      Left = 643
       Top = 1
       Width = 65
       Height = 63
@@ -258,18 +258,18 @@ object frmPedidosVenda1: TfrmPedidosVenda1
       Layout = blGlyphTop
       TabOrder = 1
       OnClick = btnCancelarClick
-      ExplicitLeft = 643
+      ExplicitLeft = 639
     end
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 65
-    Width = 713
-    Height = 409
+    Width = 709
+    Height = 408
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 709
-    ExplicitHeight = 408
+    ExplicitWidth = 705
+    ExplicitHeight = 407
     object CamposObrigatorios: TValueListEditor
       Left = 414
       Top = 231
@@ -297,14 +297,14 @@ object frmPedidosVenda1: TfrmPedidosVenda1
     end
     object gpbProdutos: TGroupBox
       Left = 2
-      Top = 53
-      Width = 709
+      Top = 52
+      Width = 705
       Height = 354
       Align = alBottom
       Caption = 'Produtos/Mercadorias'
       TabOrder = 1
-      ExplicitTop = 52
-      ExplicitWidth = 705
+      ExplicitTop = 51
+      ExplicitWidth = 701
       object gridVendasItens: TDBGrid
         Left = 6
         Top = 16
@@ -641,13 +641,13 @@ object frmPedidosVenda1: TfrmPedidosVenda1
   end
   object Panel2: TPanel
     Left = 0
-    Top = 474
-    Width = 713
+    Top = 473
+    Width = 709
     Height = 30
     Align = alBottom
     TabOrder = 2
-    ExplicitTop = 473
-    ExplicitWidth = 709
+    ExplicitTop = 472
+    ExplicitWidth = 705
     object Label7: TLabel
       Left = 550
       Top = 9

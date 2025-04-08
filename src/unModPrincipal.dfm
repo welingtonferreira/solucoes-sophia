@@ -4,11 +4,14 @@ object DMPrincipal: TDMPrincipal
   Width = 417
   object FireDacCon: TFDConnection
     Params.Strings = (
-      'User_Name=root'
-      'Password=root'
-      'Server=localhost'
-      'Database=SISMASTER'
-      'DriverID=MySQL')
+      'Database=SOPHIA'
+      'Encrypt=No'
+      'OSAuthent=Yes'
+      'Server=localhost\SQLEXPRESS'
+      'ApplicationName=Enterprise/Architect/Ultimate'
+      'Workstation=WELINGTON-PC'
+      'MARS=yes'
+      'DriverID=MSSQL')
     TxOptions.Isolation = xiReadCommitted
     TxOptions.AutoStop = False
     TxOptions.StopOptions = [xoIfAutoStarted]
@@ -31,9 +34,8 @@ object DMPrincipal: TDMPrincipal
     Left = 208
     Top = 104
   end
-  object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
-    VendorLib = 'C:\BACKUP\Testes\SisMaster\bin\LIBMYSQL.DLL'
-    Left = 208
-    Top = 48
+  object FDPhysMSSQLDriverLink1: TFDPhysMSSQLDriverLink
+    Left = 200
+    Top = 184
   end
 end

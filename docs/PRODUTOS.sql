@@ -1,8 +1,8 @@
-CREATE TABLE `produtos` (
-  `id_produto` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_produto` varchar(255) NOT NULL,
-  `preco_unitario` decimal(10,2) NOT NULL,
-  `estoque_disponivel` int(11) DEFAULT '0',
-  PRIMARY KEY (`id_produto`),
-  UNIQUE KEY `uq_produto_nome` (`nome_produto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+CREATE TABLE produtos (
+    id_produto INT IDENTITY(1,1) NOT NULL,          -- ID do Produto
+    nome_produto NVARCHAR(255) NOT NULL,           -- Nome do Produto
+    preco_unitario DECIMAL(10, 2) NOT NULL,        -- Preço Unitário
+    estoque_disponivel INT DEFAULT 0,              -- Estoque Disponível
+    PRIMARY KEY (id_produto),                      -- Chave Primária
+    UNIQUE (nome_produto)                          -- Restrição de Unicidade
+);

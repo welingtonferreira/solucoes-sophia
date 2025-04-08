@@ -260,7 +260,8 @@ object frmCadastroProdutos1: TfrmCadastroProdutos1
       Layout = blGlyphTop
       TabOrder = 1
       OnClick = btnCancelarClick
-      ExplicitLeft = 737
+      ExplicitLeft = 747
+      ExplicitTop = -4
     end
   end
   object GroupBox1: TGroupBox

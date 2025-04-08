@@ -1,20 +1,30 @@
-DELIMITER $$
-
 CREATE TRIGGER prevent_delete_cliente
-BEFORE DELETE ON clientes
-FOR EACH ROW
+ON clientes
+INSTEAD OF DELETE
+AS
 BEGIN
-    DECLARE venda_count INT;
+    DECLARE @venda_count INT;
+    DECLARE @id_cliente INT;
 
-    -- Verifica se o cliente tem vendas associadas
-    SELECT COUNT(*) INTO venda_count
+    -- Obter o ID do cliente que está sendo excluído
+    SELECT @id_cliente = id_cliente
+    FROM deleted;
+
+    -- Verificar se o cliente tem vendas associadas
+    SELECT @venda_count = COUNT(*)
     FROM vendas
-    WHERE id_cliente = OLD.id_cliente;
+    WHERE id_cliente = @id_cliente;
 
-    -- Impede a exclusão se houver vendas associadas
-    IF venda_count > 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Não é possível excluir o cliente. Existem vendas associadas a este cliente.';
-    END IF;
-END $$
-
-DELIMITER ;
+    -- Impedir a exclusão se houver vendas associadas
+    IF @venda_count > 0
+    BEGIN
+        RAISERROR ('Não é possível excluir o cliente. Existem vendas associadas a este cliente.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        -- Excluir o cliente se não houver vendas associadas
+        DELETE FROM clientes
+        WHERE id_cliente = @id_cliente;
+    END
+END;

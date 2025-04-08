@@ -20,8 +20,8 @@ object frmRelEstoqueProdutos: TfrmRelEstoqueProdutos
     Height = 182
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 488
-    ExplicitHeight = 169
+    ExplicitWidth = 494
+    ExplicitHeight = 181
     object gpbBotoes: TGroupBox
       Left = 1
       Top = 141
@@ -29,8 +29,8 @@ object frmRelEstoqueProdutos: TfrmRelEstoqueProdutos
       Height = 40
       Align = alBottom
       TabOrder = 0
-      ExplicitTop = 128
-      ExplicitWidth = 486
+      ExplicitTop = 140
+      ExplicitWidth = 492
       object btnImprimir: TBitBtn
         Left = 168
         Top = 6
@@ -89,8 +89,8 @@ object frmRelEstoqueProdutos: TfrmRelEstoqueProdutos
       Height = 140
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 486
-      ExplicitHeight = 127
+      ExplicitWidth = 492
+      ExplicitHeight = 139
       object gpbProduto: TGroupBox
         Left = 16
         Top = 13
@@ -274,10 +274,8 @@ object frmRelEstoqueProdutos: TfrmRelEstoqueProdutos
         'tidade vendida'
       
         '    p.estoque_disponivel + COALESCE(SUM(i.quantidade), 0) AS est' +
-        'oque_anterior,  -- Estoque anterior'
-      
-        '    p.estoque_disponivel - COALESCE(SUM(i.quantidade), 0) AS est' +
-        'oque_atualizado  -- Estoque ap'#243's a venda'
+        'oque_anterior, -- Estoque anterior'
+      '    p.estoque_disponivel AS estoque_atualizado -- Estoque atual'
       'FROM '
       '    produtos p'
       'LEFT JOIN '
@@ -319,13 +317,13 @@ object frmRelEstoqueProdutos: TfrmRelEstoqueProdutos
         ParamType = ptInput
         Value = Null
       end>
-    object Estoqueid_produto: TIntegerField
-      AutoGenerateValue = arDefault
+    object Estoqueid_produto: TFDAutoIncField
       FieldName = 'id_produto'
       Origin = 'id_produto'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
-    object Estoquenome_produto: TStringField
+    object Estoquenome_produto: TWideStringField
       FieldName = 'nome_produto'
       Origin = 'nome_produto'
       Required = True
@@ -340,37 +338,24 @@ object frmRelEstoqueProdutos: TfrmRelEstoqueProdutos
       Size = 2
     end
     object Estoqueestoque_disponivel: TIntegerField
-      AutoGenerateValue = arDefault
       FieldName = 'estoque_disponivel'
       Origin = 'estoque_disponivel'
     end
-    object Estoquequantidade_saida: TFMTBCDField
-      AutoGenerateValue = arDefault
+    object Estoquequantidade_saida: TIntegerField
       FieldName = 'quantidade_saida'
       Origin = 'quantidade_saida'
-      ProviderFlags = []
       ReadOnly = True
-      Precision = 32
-      Size = 0
     end
-    object Estoqueestoque_anterior: TFMTBCDField
-      AutoGenerateValue = arDefault
+    object Estoqueestoque_anterior: TIntegerField
       FieldName = 'estoque_anterior'
       Origin = 'estoque_anterior'
-      ProviderFlags = []
       ReadOnly = True
-      Precision = 33
-      Size = 0
     end
-    object Estoqueestoque_atualizado: TFMTBCDField
-      AutoGenerateValue = arDefault
+    object Estoqueestoque_atualizado: TIntegerField
       FieldName = 'estoque_atualizado'
       Origin = 'estoque_atualizado'
-      ProviderFlags = []
       ReadOnly = True
       DisplayFormat = '#,##0.00'
-      Precision = 33
-      Size = 0
     end
   end
   object frxRelEstoqueProdutos: TfrxReport

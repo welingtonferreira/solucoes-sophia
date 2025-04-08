@@ -1,10 +1,10 @@
-CREATE TABLE `clientes` (
-  `id_cliente` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_completo` varchar(255) NOT NULL,
-  `cpf_cnpj` varchar(18) NOT NULL,
-  `telefone` varchar(15) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `endereco_completo` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_cliente`),
-  UNIQUE KEY `uq_cliente_cpf_cnpj` (`cpf_cnpj`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+CREATE TABLE clientes (
+    id_cliente INT IDENTITY(1,1) NOT NULL,
+    nome_completo NVARCHAR(255) NOT NULL,
+    cpf_cnpj NVARCHAR(18) NOT NULL,
+    telefone NVARCHAR(15) NULL,
+    email NVARCHAR(100) NULL,
+    endereco_completo NVARCHAR(255) NULL,
+    PRIMARY KEY (id_cliente),
+    UNIQUE (cpf_cnpj)
+);

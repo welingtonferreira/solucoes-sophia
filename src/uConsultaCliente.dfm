@@ -237,38 +237,35 @@ object frmConsultaCliente: TfrmConsultaCliente
     Top = 320
     object qryConsClienteID_CLIENTE: TFDAutoIncField
       FieldName = 'ID_CLIENTE'
-      Origin = 'id_cliente'
+      Origin = 'ID_CLIENTE'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object qryConsClienteNOME_COMPLETO: TStringField
+    object qryConsClienteNOME_COMPLETO: TWideStringField
       FieldName = 'NOME_COMPLETO'
-      Origin = 'nome_completo'
+      Origin = 'NOME_COMPLETO'
       Required = True
       Size = 255
     end
-    object qryConsClienteCPF_CNPJ: TStringField
+    object qryConsClienteCPF_CNPJ: TWideStringField
       FieldName = 'CPF_CNPJ'
-      Origin = 'cpf_cnpj'
+      Origin = 'CPF_CNPJ'
       Required = True
       Size = 18
     end
-    object qryConsClienteTELEFONE: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsClienteTELEFONE: TWideStringField
       FieldName = 'TELEFONE'
-      Origin = 'telefone'
+      Origin = 'TELEFONE'
       Size = 15
     end
-    object qryConsClienteEMAIL: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsClienteEMAIL: TWideStringField
       FieldName = 'EMAIL'
-      Origin = 'email'
+      Origin = 'EMAIL'
       Size = 100
     end
-    object qryConsClienteENDERECO_COMPLETO: TStringField
-      AutoGenerateValue = arDefault
+    object qryConsClienteENDERECO_COMPLETO: TWideStringField
       FieldName = 'ENDERECO_COMPLETO'
-      Origin = 'endereco_completo'
+      Origin = 'ENDERECO_COMPLETO'
       Size = 255
     end
   end

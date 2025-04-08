@@ -2,8 +2,8 @@ object frmPedidosVenda0: TfrmPedidosVenda0
   Left = 0
   Top = 0
   Caption = 'Vendas de Produtos'
-  ClientHeight = 617
-  ClientWidth = 877
+  ClientHeight = 616
+  ClientWidth = 873
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,10 @@ object frmPedidosVenda0: TfrmPedidosVenda0
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 877
+    Width = 873
     Height = 65
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 873
     object Image1: TImage
       Left = 7
       Top = 6
@@ -661,16 +660,15 @@ object frmPedidosVenda0: TfrmPedidosVenda0
   object GroupBox2: TGroupBox
     Left = 0
     Top = 65
-    Width = 877
+    Width = 873
     Height = 53
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 873
     DesignSize = (
-      877
+      873
       53)
     object btnPesquisar: TBitBtn
-      Left = 773
+      Left = 765
       Top = 0
       Width = 75
       Height = 50
@@ -832,7 +830,7 @@ object frmPedidosVenda0: TfrmPedidosVenda0
     object grpPesquisa: TGroupBox
       Left = 1
       Top = 5
-      Width = 764
+      Width = 756
       Height = 40
       Anchors = [akLeft, akTop, akRight]
       Caption = 
@@ -847,12 +845,12 @@ object frmPedidosVenda0: TfrmPedidosVenda0
       TabOrder = 1
       ExplicitWidth = 760
       DesignSize = (
-        764
+        756
         40)
       object edtPesquisa: TEdit
         Left = 8
         Top = 14
-        Width = 746
+        Width = 738
         Height = 21
         Hint = 'Para realizar a pesquisa ou limpar filtro pressione ENTER; '
         Anchors = [akLeft, akTop, akRight]
@@ -872,13 +870,11 @@ object frmPedidosVenda0: TfrmPedidosVenda0
   end
   object Panel2: TPanel
     Left = 0
-    Top = 117
-    Width = 877
+    Top = 116
+    Width = 873
     Height = 282
     Align = alBottom
     TabOrder = 2
-    ExplicitTop = 116
-    ExplicitWidth = 873
     object gridVendas: TDBGrid
       Left = 1
       Top = 1
@@ -938,13 +934,11 @@ object frmPedidosVenda0: TfrmPedidosVenda0
   end
   object Panel3: TPanel
     Left = 0
-    Top = 399
-    Width = 877
+    Top = 398
+    Width = 873
     Height = 218
     Align = alBottom
     TabOrder = 3
-    ExplicitTop = 398
-    ExplicitWidth = 873
     object gridVendasItens: TDBGrid
       Left = 1
       Top = 1

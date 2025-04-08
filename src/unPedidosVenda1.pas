@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.Imaging.jpeg, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.ComCtrls, Data.DB, Vcl.Grids,
   Vcl.DBGrids, Vcl.Mask, Vcl.ValEdit, Datasnap.DBClient, FireDAC.Comp.DataSet, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client;
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, SqlTimSt;
 
 type
   TfrmPedidosVenda1 = class(TForm)
@@ -137,6 +137,9 @@ end;
 
 procedure TfrmPedidosVenda1.btnCancelarClick(Sender: TObject);
 begin
+  if DMPrincipal.FireDacCon.InTransaction then
+    RollBackRFD;
+
   with dtCadastros do
   begin
     Vendas.Cancel;
@@ -145,7 +148,7 @@ begin
     ItensVendas.Cancel;
     ItensVendas.CancelUpdates;
   end;
-  RollBackRFD;
+
   Self.Cancelou := True;
   Fechar := True;
   Self.Close;
@@ -198,7 +201,7 @@ begin
         begin
           Vendas.Edit;
           VendasID_CLIENTE.AsString := edtCodigo.Text;
-          VendasDATA_VENDA.Value := Trunc(edtDataVenda.Date) + Frac(Now);
+          VendasDATA_VENDA.Value := DateTimeToSQLTimeStamp(Trunc(edtDataVenda.Date) + Frac(Now));
           VendasTOTAL_VENDA.Value := StrToFloat(StringReplace(edtValor.Text, '.', '', [rfReplaceAll]));
           Vendas.Post;
         end
@@ -206,7 +209,7 @@ begin
         begin
           Vendas.Insert;
           VendasID_CLIENTE.AsString := edtCodigo.Text;
-          VendasDATA_VENDA.Value := Trunc(edtDataVenda.Date) + Frac(Now);
+          VendasDATA_VENDA.Value := DateTimeToSQLTimeStamp(Trunc(edtDataVenda.Date) + Frac(Now));
           VendasTOTAL_VENDA.Value := StrToFloat(StringReplace(edtValor.Text, '.', '', [rfReplaceAll]));
           Vendas.Post;
         end;

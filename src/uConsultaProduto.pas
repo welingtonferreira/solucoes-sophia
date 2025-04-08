@@ -19,7 +19,7 @@ type
     dbgRegistros: TDBGrid;
     qryConsProduto: TFDQuery;
     qryConsProdutoID_PRODUTO: TFDAutoIncField;
-    qryConsProdutoNOME_PRODUTO: TStringField;
+    qryConsProdutoNOME_PRODUTO: TWideStringField;
     qryConsProdutoPRECO_UNITARIO: TBCDField;
     qryConsProdutoESTOQUE_DISPONIVEL: TIntegerField;
     procedure btnConfirmarClick(Sender: TObject);

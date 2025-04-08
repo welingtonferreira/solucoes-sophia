@@ -272,28 +272,27 @@ object frmConsultaProduto: TfrmConsultaProduto
     Top = 336
     object qryConsProdutoID_PRODUTO: TFDAutoIncField
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
+      Origin = 'ID_PRODUTO'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object qryConsProdutoNOME_PRODUTO: TStringField
+    object qryConsProdutoNOME_PRODUTO: TWideStringField
       FieldName = 'NOME_PRODUTO'
-      Origin = 'nome_produto'
+      Origin = 'NOME_PRODUTO'
       Required = True
       Size = 255
     end
     object qryConsProdutoPRECO_UNITARIO: TBCDField
       FieldName = 'PRECO_UNITARIO'
-      Origin = 'preco_unitario'
+      Origin = 'PRECO_UNITARIO'
       Required = True
       DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
     object qryConsProdutoESTOQUE_DISPONIVEL: TIntegerField
-      AutoGenerateValue = arDefault
       FieldName = 'ESTOQUE_DISPONIVEL'
-      Origin = 'estoque_disponivel'
+      Origin = 'ESTOQUE_DISPONIVEL'
     end
   end
 end

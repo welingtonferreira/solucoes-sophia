@@ -49,12 +49,15 @@ uses
 
 procedure TfrmCadastroProdutos1.btnCancelarClick(Sender: TObject);
 begin
+  if DMPrincipal.FireDacCon.InTransaction then
+    RollBackRFD;
+
   with dtCadastros do
   begin
     Produtos.Cancel;
     Produtos.CancelUpdates;
   end;
-  RollBackRFD;
+
   Self.Cancelou := True;
   Fechar := True;
   Self.Close;
@@ -67,6 +70,9 @@ begin
     with dtCadastros do
     begin
       try
+        // Iniciar a transação
+        DMPrincipal.FireTransCon.StartTransaction;
+
         Produtos.Edit;
         ProdutosNOME_PRODUTO.Value := edtDescricao.Text;
         ProdutosPRECO_UNITARIO.AsFloat := StrToFloat(edtValor.Text);

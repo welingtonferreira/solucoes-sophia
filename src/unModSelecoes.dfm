@@ -13,28 +13,27 @@ object dtSelecoes: TdtSelecoes
     Top = 8
     object ConsProdutosID_PRODUTO: TFDAutoIncField
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
+      Origin = 'ID_PRODUTO'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object ConsProdutosNOME_PRODUTO: TStringField
+    object ConsProdutosNOME_PRODUTO: TWideStringField
       FieldName = 'NOME_PRODUTO'
-      Origin = 'nome_produto'
+      Origin = 'NOME_PRODUTO'
       Required = True
       Size = 255
     end
     object ConsProdutosPRECO_UNITARIO: TBCDField
       FieldName = 'PRECO_UNITARIO'
-      Origin = 'preco_unitario'
+      Origin = 'PRECO_UNITARIO'
       Required = True
       DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
     object ConsProdutosESTOQUE_DISPONIVEL: TIntegerField
-      AutoGenerateValue = arDefault
       FieldName = 'ESTOQUE_DISPONIVEL'
-      Origin = 'estoque_disponivel'
+      Origin = 'ESTOQUE_DISPONIVEL'
     end
   end
   object dsConsProdutos: TDataSource
@@ -54,28 +53,35 @@ object dtSelecoes: TdtSelecoes
     Top = 8
     object ConsClientesID_CLIENTE: TFDAutoIncField
       FieldName = 'ID_CLIENTE'
+      Origin = 'ID_CLIENTE'
+      ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object ConsClientesNOME_COMPLETO: TStringField
+    object ConsClientesNOME_COMPLETO: TWideStringField
       FieldName = 'NOME_COMPLETO'
+      Origin = 'NOME_COMPLETO'
       Required = True
       Size = 255
     end
-    object ConsClientesCPF_CNPJ: TStringField
+    object ConsClientesCPF_CNPJ: TWideStringField
       FieldName = 'CPF_CNPJ'
+      Origin = 'CPF_CNPJ'
       Required = True
       Size = 18
     end
-    object ConsClientesTELEFONE: TStringField
+    object ConsClientesTELEFONE: TWideStringField
       FieldName = 'TELEFONE'
+      Origin = 'TELEFONE'
       Size = 15
     end
-    object ConsClientesEMAIL: TStringField
+    object ConsClientesEMAIL: TWideStringField
       FieldName = 'EMAIL'
+      Origin = 'EMAIL'
       Size = 100
     end
-    object ConsClientesENDERECO_COMPLETO: TStringField
+    object ConsClientesENDERECO_COMPLETO: TWideStringField
       FieldName = 'ENDERECO_COMPLETO'
+      Origin = 'ENDERECO_COMPLETO'
       Size = 255
     end
   end
@@ -90,7 +96,7 @@ object dtSelecoes: TdtSelecoes
       
         'SELECT ID, NOME, CPF, RG, EMAIL, CEL, TEL, LOGIN, SENHA, ADMINIS' +
         'TRADOR'
-      '  FROM USER'
+      '  FROM [USER]'
       ' WHERE (LOGIN = :LOGIN OR :LOGIN = '#39'?'#39')')
     Left = 104
     Top = 200
@@ -103,47 +109,57 @@ object dtSelecoes: TdtSelecoes
       end>
     object ConsUserID: TFDAutoIncField
       FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object ConsUserNOME: TStringField
+    object ConsUserNOME: TWideStringField
       FieldName = 'NOME'
+      Origin = 'NOME'
       Required = True
       Size = 100
     end
     object ConsUserCPF: TStringField
       FieldName = 'CPF'
+      Origin = 'CPF'
       FixedChar = True
       Size = 11
     end
-    object ConsUserRG: TStringField
+    object ConsUserRG: TWideStringField
       FieldName = 'RG'
+      Origin = 'RG'
     end
-    object ConsUserEMAIL: TStringField
+    object ConsUserEMAIL: TWideStringField
       FieldName = 'EMAIL'
+      Origin = 'EMAIL'
       Size = 100
     end
-    object ConsUserCEL: TStringField
+    object ConsUserCEL: TWideStringField
       FieldName = 'CEL'
+      Origin = 'CEL'
       Size = 15
     end
-    object ConsUserTEL: TStringField
+    object ConsUserTEL: TWideStringField
       FieldName = 'TEL'
+      Origin = 'TEL'
       Size = 15
     end
-    object ConsUserLOGIN: TStringField
+    object ConsUserLOGIN: TWideStringField
       FieldName = 'LOGIN'
+      Origin = 'LOGIN'
       Required = True
       Size = 50
     end
-    object ConsUserSENHA: TStringField
+    object ConsUserSENHA: TWideStringField
       FieldName = 'SENHA'
+      Origin = 'SENHA'
       Required = True
       Size = 100
     end
     object ConsUserADMINISTRADOR: TBooleanField
-      AutoGenerateValue = arDefault
       FieldName = 'ADMINISTRADOR'
-      Origin = 'administrador'
+      Origin = 'ADMINISTRADOR'
+      Required = True
     end
   end
   object dsConsUser: TDataSource
@@ -164,33 +180,31 @@ object dtSelecoes: TdtSelecoes
     Top = 4
     object ConsVendasID_VENDA: TFDAutoIncField
       FieldName = 'ID_VENDA'
-      Origin = 'id_venda'
+      Origin = 'ID_VENDA'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object ConsVendasID_CLIENTE: TIntegerField
       FieldName = 'ID_CLIENTE'
-      Origin = 'id_cliente'
+      Origin = 'ID_CLIENTE'
       Required = True
     end
-    object ConsVendasDATA_VENDA: TDateTimeField
+    object ConsVendasDATA_VENDA: TSQLTimeStampField
       FieldName = 'DATA_VENDA'
-      Origin = 'data_venda'
+      Origin = 'DATA_VENDA'
       Required = True
     end
     object ConsVendasTOTAL_VENDA: TBCDField
       FieldName = 'TOTAL_VENDA'
-      Origin = 'total_venda'
+      Origin = 'TOTAL_VENDA'
       Required = True
       DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
-    object ConsVendasNOME_COMPLETO: TStringField
-      AutoGenerateValue = arDefault
+    object ConsVendasNOME_COMPLETO: TWideStringField
       FieldName = 'NOME_COMPLETO'
       Origin = 'NOME_COMPLETO'
-      ProviderFlags = []
       ReadOnly = True
       Size = 255
     end
@@ -218,28 +232,28 @@ object dtSelecoes: TdtSelecoes
     Top = 168
     object ConsVendasItensID_ITEM: TFDAutoIncField
       FieldName = 'ID_ITEM'
-      Origin = 'id_item'
+      Origin = 'ID_ITEM'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object ConsVendasItensID_VENDA: TIntegerField
       FieldName = 'ID_VENDA'
-      Origin = 'id_venda'
+      Origin = 'ID_VENDA'
       Required = True
     end
     object ConsVendasItensID_PRODUTO: TIntegerField
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
+      Origin = 'ID_PRODUTO'
       Required = True
     end
     object ConsVendasItensQUANTIDADE: TIntegerField
       FieldName = 'QUANTIDADE'
-      Origin = 'quantidade'
+      Origin = 'QUANTIDADE'
       Required = True
     end
     object ConsVendasItensVALOR_UNITARIO: TBCDField
       FieldName = 'VALOR_UNITARIO'
-      Origin = 'valor_unitario'
+      Origin = 'VALOR_UNITARIO'
       Required = True
       DisplayFormat = '#,##0.00'
       Precision = 10
@@ -247,17 +261,15 @@ object dtSelecoes: TdtSelecoes
     end
     object ConsVendasItensSUBTOTAL: TBCDField
       FieldName = 'SUBTOTAL'
-      Origin = 'subtotal'
+      Origin = 'SUBTOTAL'
       Required = True
       DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
-    object ConsVendasItensNOME_PRODUTO: TStringField
-      AutoGenerateValue = arDefault
+    object ConsVendasItensNOME_PRODUTO: TWideStringField
       FieldName = 'NOME_PRODUTO'
       Origin = 'NOME_PRODUTO'
-      ProviderFlags = []
       ReadOnly = True
       Size = 255
     end
@@ -282,44 +294,44 @@ object dtSelecoes: TdtSelecoes
     Top = 156
     object ConsInsereVendasItensID_ITEM: TFDAutoIncField
       FieldName = 'ID_ITEM'
-      Origin = 'id_item'
+      Origin = 'ID_ITEM'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object ConsInsereVendasItensID_VENDA: TIntegerField
       FieldName = 'ID_VENDA'
-      Origin = 'id_venda'
+      Origin = 'ID_VENDA'
       Required = True
     end
     object ConsInsereVendasItensID_PRODUTO: TIntegerField
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
+      Origin = 'ID_PRODUTO'
       Required = True
     end
     object ConsInsereVendasItensQUANTIDADE: TIntegerField
       FieldName = 'QUANTIDADE'
-      Origin = 'quantidade'
+      Origin = 'QUANTIDADE'
       Required = True
     end
     object ConsInsereVendasItensVALOR_UNITARIO: TBCDField
       FieldName = 'VALOR_UNITARIO'
-      Origin = 'valor_unitario'
+      Origin = 'VALOR_UNITARIO'
       Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
     object ConsInsereVendasItensSUBTOTAL: TBCDField
       FieldName = 'SUBTOTAL'
-      Origin = 'subtotal'
+      Origin = 'SUBTOTAL'
       Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
-    object ConsInsereVendasItensNOME_PRODUTO: TStringField
-      AutoGenerateValue = arDefault
+    object ConsInsereVendasItensNOME_PRODUTO: TWideStringField
       FieldName = 'NOME_PRODUTO'
       Origin = 'NOME_PRODUTO'
-      ProviderFlags = []
       ReadOnly = True
       Size = 255
     end

@@ -910,45 +910,6 @@ object frmRelVendas: TfrmRelVendas
     DataSetOptions = []
     Left = 393
     Top = 9
-    FieldDefs = <
-      item
-        FieldName = 'ID_VENDA'
-      end
-      item
-        FieldName = 'DATA_VENDA'
-        FieldType = fftDateTime
-      end
-      item
-        FieldName = 'TOTAL_VENDA'
-      end
-      item
-        FieldName = 'ID_CLIENTE'
-      end
-      item
-        FieldName = 'CLIENTE'
-        FieldType = fftString
-        Size = 255
-      end
-      item
-        FieldName = 'ID_PRODUTO'
-      end
-      item
-        FieldName = 'PRODUTO'
-        FieldType = fftString
-        Size = 255
-      end
-      item
-        FieldName = 'QUANTIDADE'
-      end
-      item
-        FieldName = 'VALOR_UNITARIO'
-      end
-      item
-        FieldName = 'SUBTOTAL'
-      end
-      item
-        FieldName = 'TOTAL_GERAL'
-      end>
   end
   object Vendas: TFDQuery
     Connection = DMPrincipal.FireDacCon
@@ -1008,84 +969,72 @@ object frmRelVendas: TfrmRelVendas
       end>
     object VendasID_VENDA: TFDAutoIncField
       FieldName = 'ID_VENDA'
-      Origin = 'id_venda'
+      Origin = 'ID_VENDA'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object VendasDATA_VENDA: TDateTimeField
+    object VendasDATA_VENDA: TSQLTimeStampField
       FieldName = 'DATA_VENDA'
-      Origin = 'data_venda'
+      Origin = 'DATA_VENDA'
       Required = True
     end
     object VendasTOTAL_VENDA: TBCDField
       FieldName = 'TOTAL_VENDA'
-      Origin = 'total_venda'
+      Origin = 'TOTAL_VENDA'
       Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
-    object VendasID_CLIENTE: TIntegerField
-      AutoGenerateValue = arDefault
+    object VendasID_CLIENTE: TFDAutoIncField
       FieldName = 'ID_CLIENTE'
-      Origin = 'id_cliente'
-      ProviderFlags = []
+      Origin = 'ID_CLIENTE'
       ReadOnly = True
     end
-    object VendasCLIENTE: TStringField
-      AutoGenerateValue = arDefault
+    object VendasCLIENTE: TWideStringField
       FieldName = 'CLIENTE'
-      Origin = 'nome_completo'
-      ProviderFlags = []
-      ReadOnly = True
+      Origin = 'CLIENTE'
+      Required = True
       Size = 255
     end
     object VendasID_PRODUTO: TIntegerField
-      AutoGenerateValue = arDefault
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
-      ProviderFlags = []
-      ReadOnly = True
-    end
-    object VendasPRODUTO: TStringField
-      AutoGenerateValue = arDefault
-      FieldName = 'PRODUTO'
-      Origin = 'nome_produto'
-      ProviderFlags = []
-      ReadOnly = True
-      Size = 255
+      Origin = 'ID_PRODUTO'
+      Required = True
     end
     object VendasQUANTIDADE: TIntegerField
-      AutoGenerateValue = arDefault
       FieldName = 'QUANTIDADE'
-      Origin = 'quantidade'
-      ProviderFlags = []
-      ReadOnly = True
+      Origin = 'QUANTIDADE'
+      Required = True
     end
     object VendasVALOR_UNITARIO: TBCDField
-      AutoGenerateValue = arDefault
       FieldName = 'VALOR_UNITARIO'
-      Origin = 'valor_unitario'
-      ProviderFlags = []
-      ReadOnly = True
+      Origin = 'VALOR_UNITARIO'
+      Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
     object VendasSUBTOTAL: TBCDField
-      AutoGenerateValue = arDefault
       FieldName = 'SUBTOTAL'
-      Origin = 'subtotal'
-      ProviderFlags = []
-      ReadOnly = True
+      Origin = 'SUBTOTAL'
+      Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
+    object VendasPRODUTO: TWideStringField
+      FieldName = 'PRODUTO'
+      Origin = 'PRODUTO'
+      Required = True
+      Size = 255
+    end
     object VendasTOTAL_GERAL: TFMTBCDField
-      AutoGenerateValue = arDefault
       FieldName = 'TOTAL_GERAL'
       Origin = 'TOTAL_GERAL'
-      ProviderFlags = []
       ReadOnly = True
-      Precision = 32
+      DisplayFormat = '#,##0.00'
+      Precision = 38
       Size = 2
     end
   end

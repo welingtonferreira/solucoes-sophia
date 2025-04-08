@@ -19,28 +19,21 @@ object dtCadastros: TdtCadastros
     Top = 8
     object ProdutosID_PRODUTO: TFDAutoIncField
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
-      ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object ProdutosNOME_PRODUTO: TStringField
+    object ProdutosNOME_PRODUTO: TWideStringField
       FieldName = 'NOME_PRODUTO'
-      Origin = 'nome_produto'
       Required = True
       Size = 255
     end
     object ProdutosPRECO_UNITARIO: TBCDField
       FieldName = 'PRECO_UNITARIO'
-      Origin = 'preco_unitario'
       Required = True
-      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
     object ProdutosESTOQUE_DISPONIVEL: TIntegerField
-      AutoGenerateValue = arDefault
       FieldName = 'ESTOQUE_DISPONIVEL'
-      Origin = 'estoque_disponivel'
     end
   end
   object dsProdutos: TDataSource
@@ -64,38 +57,35 @@ object dtCadastros: TdtCadastros
     Top = 8
     object ClientesID_CLIENTE: TFDAutoIncField
       FieldName = 'ID_CLIENTE'
-      Origin = 'id_cliente'
+      Origin = 'ID_CLIENTE'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object ClientesNOME_COMPLETO: TStringField
+    object ClientesNOME_COMPLETO: TWideStringField
       FieldName = 'NOME_COMPLETO'
-      Origin = 'nome_completo'
+      Origin = 'NOME_COMPLETO'
       Required = True
       Size = 255
     end
-    object ClientesCPF_CNPJ: TStringField
+    object ClientesCPF_CNPJ: TWideStringField
       FieldName = 'CPF_CNPJ'
-      Origin = 'cpf_cnpj'
+      Origin = 'CPF_CNPJ'
       Required = True
       Size = 18
     end
-    object ClientesTELEFONE: TStringField
-      AutoGenerateValue = arDefault
+    object ClientesTELEFONE: TWideStringField
       FieldName = 'TELEFONE'
-      Origin = 'telefone'
+      Origin = 'TELEFONE'
       Size = 15
     end
-    object ClientesEMAIL: TStringField
-      AutoGenerateValue = arDefault
+    object ClientesEMAIL: TWideStringField
       FieldName = 'EMAIL'
-      Origin = 'email'
+      Origin = 'EMAIL'
       Size = 100
     end
-    object ClientesENDERECO_COMPLETO: TStringField
-      AutoGenerateValue = arDefault
+    object ClientesENDERECO_COMPLETO: TWideStringField
       FieldName = 'ENDERECO_COMPLETO'
-      Origin = 'endereco_completo'
+      Origin = 'ENDERECO_COMPLETO'
       Size = 255
     end
   end
@@ -107,58 +97,82 @@ object dtCadastros: TdtCadastros
   object upProdutos: TFDUpdateSQL
     Connection = DMPrincipal.FireDacCon
     InsertSQL.Strings = (
-      'INSERT INTO sismaster.produtos'
+      'INSERT INTO SOPHIA.dbo.PRODUTOS'
       '(nome_produto, preco_unitario, estoque_disponivel)'
       
-        'VALUES (:new_nome_produto, :new_preco_unitario, :new_estoque_dis' +
-        'ponivel)')
+        'VALUES (:NEW_nome_produto, :NEW_preco_unitario, :NEW_estoque_dis' +
+        'ponivel);'
+      'SELECT SCOPE_IDENTITY() AS id_produto')
     ModifySQL.Strings = (
-      'UPDATE sismaster.produtos'
+      'UPDATE SOPHIA.dbo.PRODUTOS'
       
-        'SET nome_produto = :new_nome_produto, preco_unitario = :new_prec' +
+        'SET nome_produto = :NEW_nome_produto, preco_unitario = :NEW_prec' +
         'o_unitario, '
-      '  estoque_disponivel = :new_estoque_disponivel'
-      'WHERE id_produto = :old_id_produto')
+      '  estoque_disponivel = :NEW_estoque_disponivel'
+      
+        'WHERE nome_produto = :OLD_nome_produto AND preco_unitario = :OLD' +
+        '_preco_unitario AND '
+      '  estoque_disponivel = :OLD_estoque_disponivel;'
+      'SELECT id_produto'
+      'FROM SOPHIA.dbo.PRODUTOS'
+      
+        'WHERE nome_produto = :NEW_nome_produto AND preco_unitario = :NEW' +
+        '_preco_unitario AND '
+      '  estoque_disponivel = :NEW_estoque_disponivel')
     DeleteSQL.Strings = (
-      'DELETE FROM sismaster.produtos'
-      'WHERE id_produto = :old_id_produto')
+      'DELETE FROM SOPHIA.dbo.PRODUTOS'
+      
+        'WHERE nome_produto = :OLD_nome_produto AND preco_unitario = :OLD' +
+        '_preco_unitario AND '
+      '  estoque_disponivel = :OLD_estoque_disponivel')
     FetchRowSQL.Strings = (
       
         'SELECT id_produto, nome_produto, preco_unitario, estoque_disponi' +
         'vel'
-      'FROM sismaster.produtos'
-      'WHERE id_produto = :old_id_produto')
+      'FROM ('
+      'select * from PRODUTOS'
+      ') '
+      
+        'WHERE nome_produto = :OLD_nome_produto AND preco_unitario = :OLD' +
+        '_preco_unitario AND '
+      '  estoque_disponivel = :OLD_estoque_disponivel')
     Left = 120
     Top = 112
   end
   object upClientes: TFDUpdateSQL
     Connection = DMPrincipal.FireDacCon
     InsertSQL.Strings = (
-      'INSERT INTO sismaster.clientes'
+      'INSERT INTO SOPHIA.dbo.CLIENTES'
       '(nome_completo, cpf_cnpj, telefone, email, '
       '  endereco_completo)'
       
-        'VALUES (:new_nome_completo, :new_cpf_cnpj, :new_telefone, :new_e' +
+        'VALUES (:NEW_nome_completo, :NEW_cpf_cnpj, :NEW_telefone, :NEW_e' +
         'mail, '
-      '  :new_endereco_completo)')
+      '  :NEW_endereco_completo);'
+      'SELECT SCOPE_IDENTITY() AS id_cliente')
     ModifySQL.Strings = (
-      'UPDATE sismaster.clientes'
+      'UPDATE SOPHIA.dbo.CLIENTES'
       
-        'SET nome_completo = :new_nome_completo, cpf_cnpj = :new_cpf_cnpj' +
+        'SET nome_completo = :NEW_nome_completo, cpf_cnpj = :NEW_cpf_cnpj' +
         ', '
       
-        '  telefone = :new_telefone, email = :new_email, endereco_complet' +
-        'o = :new_endereco_completo'
-      'WHERE id_cliente = :old_id_cliente')
+        '  telefone = :NEW_telefone, email = :NEW_email, endereco_complet' +
+        'o = :NEW_endereco_completo'
+      'WHERE id_cliente = :OLD_id_cliente;'
+      'SELECT id_cliente'
+      'FROM SOPHIA.dbo.CLIENTES'
+      'WHERE id_cliente = :NEW_id_cliente')
     DeleteSQL.Strings = (
-      'DELETE FROM sismaster.clientes'
-      'WHERE id_cliente = :old_id_cliente')
+      'DELETE FROM SOPHIA.dbo.CLIENTES'
+      'WHERE id_cliente = :OLD_id_cliente')
     FetchRowSQL.Strings = (
       
         'SELECT id_cliente, nome_completo, cpf_cnpj, telefone, email, end' +
         'ereco_completo'
-      'FROM sismaster.clientes'
-      'WHERE id_cliente = :old_id_cliente')
+      'FROM ('
+      'select * from CLIENTES'
+      ') '
+      'WHERE id_cliente = :OLD_id_cliente')
     Left = 43
     Top = 104
   end
@@ -177,24 +191,25 @@ object dtCadastros: TdtCadastros
     Top = 16
     object VendasID_VENDA: TFDAutoIncField
       FieldName = 'ID_VENDA'
-      Origin = 'id_venda'
+      Origin = 'ID_VENDA'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object VendasID_CLIENTE: TIntegerField
       FieldName = 'ID_CLIENTE'
-      Origin = 'id_cliente'
+      Origin = 'ID_CLIENTE'
       Required = True
     end
-    object VendasDATA_VENDA: TDateTimeField
+    object VendasDATA_VENDA: TSQLTimeStampField
       FieldName = 'DATA_VENDA'
-      Origin = 'data_venda'
+      Origin = 'DATA_VENDA'
       Required = True
     end
     object VendasTOTAL_VENDA: TBCDField
       FieldName = 'TOTAL_VENDA'
-      Origin = 'total_venda'
+      Origin = 'TOTAL_VENDA'
       Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
@@ -207,25 +222,32 @@ object dtCadastros: TdtCadastros
   object upVendas: TFDUpdateSQL
     Connection = DMPrincipal.FireDacCon
     InsertSQL.Strings = (
-      'INSERT INTO sismaster.vendas'
+      'INSERT INTO SOPHIA.dbo.VENDAS'
       '(id_cliente, data_venda, total_venda)'
-      'VALUES (:new_id_cliente, :new_data_venda, :new_total_venda)')
+      'VALUES (:NEW_id_cliente, :NEW_data_venda, :NEW_total_venda);'
+      'SELECT SCOPE_IDENTITY() AS id_venda')
     ModifySQL.Strings = (
-      'UPDATE sismaster.vendas'
-      'SET id_cliente = :new_id_cliente, data_venda = :new_data_venda, '
-      '  total_venda = :new_total_venda'
-      'WHERE id_venda = :old_id_venda')
+      'UPDATE SOPHIA.dbo.VENDAS'
+      'SET id_cliente = :NEW_id_cliente, data_venda = :NEW_data_venda, '
+      '  total_venda = :NEW_total_venda'
+      'WHERE id_venda = :OLD_id_venda;'
+      'SELECT id_venda'
+      'FROM SOPHIA.dbo.VENDAS'
+      'WHERE id_venda = :NEW_id_venda')
     DeleteSQL.Strings = (
-      'DELETE FROM sismaster.vendas'
-      'WHERE id_venda = :old_id_venda')
+      'DELETE FROM SOPHIA.dbo.VENDAS'
+      'WHERE id_venda = :OLD_id_venda')
     FetchRowSQL.Strings = (
       'SELECT id_venda, id_cliente, data_venda, total_venda'
-      'FROM sismaster.vendas'
-      'WHERE id_venda = :old_id_venda')
+      'FROM ('
+      'select * from VENDAS'
+      ') '
+      'WHERE id_venda = :OLD_id_venda')
     Left = 192
     Top = 118
   end
   object ItensVendas: TFDQuery
+    Active = True
     CachedUpdates = True
     Connection = DMPrincipal.FireDacCon
     Transaction = DMPrincipal.FireTransCon
@@ -241,46 +263,40 @@ object dtCadastros: TdtCadastros
     Top = 24
     object ItensVendasID_ITEM: TFDAutoIncField
       FieldName = 'ID_ITEM'
-      Origin = 'id_item'
+      Origin = 'ID_ITEM'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object ItensVendasID_VENDA: TIntegerField
       FieldName = 'ID_VENDA'
-      Origin = 'id_venda'
+      Origin = 'ID_VENDA'
       Required = True
     end
     object ItensVendasID_PRODUTO: TIntegerField
       FieldName = 'ID_PRODUTO'
-      Origin = 'id_produto'
+      Origin = 'ID_PRODUTO'
       Required = True
     end
     object ItensVendasQUANTIDADE: TIntegerField
       FieldName = 'QUANTIDADE'
-      Origin = 'quantidade'
+      Origin = 'QUANTIDADE'
       Required = True
     end
     object ItensVendasVALOR_UNITARIO: TBCDField
       FieldName = 'VALOR_UNITARIO'
-      Origin = 'valor_unitario'
+      Origin = 'VALOR_UNITARIO'
       Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
     end
     object ItensVendasSUBTOTAL: TBCDField
       FieldName = 'SUBTOTAL'
-      Origin = 'subtotal'
+      Origin = 'SUBTOTAL'
       Required = True
+      DisplayFormat = '#,##0.00'
       Precision = 10
       Size = 2
-    end
-    object ItensVendasVIRTUAL_NOME_PRODUTO: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'VIRTUAL_NOME_PRODUTO'
-      LookupDataSet = dtSelecoes.ConsProdutos
-      LookupKeyFields = 'ID_PRODUTO'
-      LookupResultField = 'NOME_PRODUTO'
-      Calculated = True
     end
   end
   object dsItensVendas: TDataSource
@@ -291,29 +307,35 @@ object dtCadastros: TdtCadastros
   object upItensVendas: TFDUpdateSQL
     Connection = DMPrincipal.FireDacCon
     InsertSQL.Strings = (
-      'INSERT INTO sismaster.itens_venda'
+      'INSERT INTO SOPHIA.dbo.ITENS_VENDA'
       '(id_venda, id_produto, quantidade, valor_unitario, '
       '  subtotal)'
       
-        'VALUES (:new_id_venda, :new_id_produto, :new_quantidade, :new_va' +
+        'VALUES (:NEW_id_venda, :NEW_id_produto, :NEW_quantidade, :NEW_va' +
         'lor_unitario, '
-      '  :new_subtotal)')
+      '  :NEW_subtotal);'
+      'SELECT SCOPE_IDENTITY() AS id_item')
     ModifySQL.Strings = (
-      'UPDATE sismaster.itens_venda'
+      'UPDATE SOPHIA.dbo.ITENS_VENDA'
       
-        'SET id_venda = :new_id_venda, id_produto = :new_id_produto, quan' +
-        'tidade = :new_quantidade, '
-      '  valor_unitario = :new_valor_unitario, subtotal = :new_subtotal'
-      'WHERE id_item = :old_id_item')
+        'SET id_venda = :NEW_id_venda, id_produto = :NEW_id_produto, quan' +
+        'tidade = :NEW_quantidade, '
+      '  valor_unitario = :NEW_valor_unitario, subtotal = :NEW_subtotal'
+      'WHERE id_item = :OLD_id_item;'
+      'SELECT id_item'
+      'FROM SOPHIA.dbo.ITENS_VENDA'
+      'WHERE id_item = :NEW_id_item')
     DeleteSQL.Strings = (
-      'DELETE FROM sismaster.itens_venda'
-      'WHERE id_item = :old_id_item')
+      'DELETE FROM SOPHIA.dbo.ITENS_VENDA'
+      'WHERE id_item = :OLD_id_item')
     FetchRowSQL.Strings = (
       
         'SELECT id_item, id_venda, id_produto, quantidade, valor_unitario' +
         ', subtotal'
-      'FROM sismaster.itens_venda'
-      'WHERE id_item = :old_id_item')
+      'FROM ('
+      'select * from ITENS_VENDA'
+      ') '
+      'WHERE id_item = :OLD_id_item')
     Left = 264
     Top = 134
   end
@@ -326,60 +348,55 @@ object dtCadastros: TdtCadastros
     UpdateObject = upUser
     SQL.Strings = (
       'SELECT ID, NOME, CPF, RG, EMAIL, CEL, TEL, LOGIN, SENHA'
-      'FROM USER')
+      'FROM [USER]')
     Left = 424
     Top = 24
     object UserID: TFDAutoIncField
       FieldName = 'ID'
-      Origin = 'id'
+      Origin = 'ID'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
-    object UserNOME: TStringField
+    object UserNOME: TWideStringField
       FieldName = 'NOME'
-      Origin = 'nome'
+      Origin = 'NOME'
       Required = True
       Size = 100
     end
     object UserCPF: TStringField
-      AutoGenerateValue = arDefault
       FieldName = 'CPF'
-      Origin = 'cpf'
+      Origin = 'CPF'
       FixedChar = True
       Size = 11
     end
-    object UserRG: TStringField
-      AutoGenerateValue = arDefault
+    object UserRG: TWideStringField
       FieldName = 'RG'
-      Origin = 'rg'
+      Origin = 'RG'
     end
-    object UserEMAIL: TStringField
-      AutoGenerateValue = arDefault
+    object UserEMAIL: TWideStringField
       FieldName = 'EMAIL'
-      Origin = 'email'
+      Origin = 'EMAIL'
       Size = 100
     end
-    object UserCEL: TStringField
-      AutoGenerateValue = arDefault
+    object UserCEL: TWideStringField
       FieldName = 'CEL'
-      Origin = 'cel'
+      Origin = 'CEL'
       Size = 15
     end
-    object UserTEL: TStringField
-      AutoGenerateValue = arDefault
+    object UserTEL: TWideStringField
       FieldName = 'TEL'
-      Origin = 'tel'
+      Origin = 'TEL'
       Size = 15
     end
-    object UserLOGIN: TStringField
+    object UserLOGIN: TWideStringField
       FieldName = 'LOGIN'
-      Origin = 'login'
+      Origin = 'LOGIN'
       Required = True
       Size = 50
     end
-    object UserSENHA: TStringField
+    object UserSENHA: TWideStringField
       FieldName = 'SENHA'
-      Origin = 'senha'
+      Origin = 'SENHA'
       Required = True
       Size = 100
     end
@@ -392,29 +409,37 @@ object dtCadastros: TdtCadastros
   object upUser: TFDUpdateSQL
     Connection = DMPrincipal.FireDacCon
     InsertSQL.Strings = (
-      'INSERT INTO sismaster.`user`'
+      'INSERT INTO SOPHIA.dbo.[USER]'
       '(nome, cpf, rg, email, cel, tel, '
       '  login, senha)'
       
-        'VALUES (:new_nome, :new_cpf, :new_rg, :new_email, :new_cel, :new' +
+        'VALUES (:NEW_nome, :NEW_cpf, :NEW_rg, :NEW_email, :NEW_cel, :NEW' +
         '_tel, '
-      '  :new_login, :new_senha)')
+      '  :NEW_login, :NEW_senha);'
+      'SELECT SCOPE_IDENTITY() AS id')
     ModifySQL.Strings = (
-      'UPDATE sismaster.`user`'
+      'UPDATE SOPHIA.dbo.[USER]'
       
-        'SET nome = :new_nome, cpf = :new_cpf, rg = :new_rg, email = :new' +
+        'SET nome = :NEW_nome, cpf = :NEW_cpf, rg = :NEW_rg, email = :NEW' +
         '_email, '
       
-        '  cel = :new_cel, tel = :new_tel, login = :new_login, senha = :n' +
-        'ew_senha'
-      'WHERE id = :old_id')
+        '  cel = :NEW_cel, tel = :NEW_tel, login = :NEW_login, senha = :N' +
+        'EW_senha'
+      'WHERE id = :OLD_id;'
+      'SELECT id'
+      'FROM SOPHIA.dbo.[USER]'
+      'WHERE id = :NEW_id')
     DeleteSQL.Strings = (
-      'DELETE FROM sismaster.`user`'
-      'WHERE id = :old_id')
+      'DELETE FROM SOPHIA.dbo.[USER]'
+      'WHERE id = :OLD_id')
     FetchRowSQL.Strings = (
-      'SELECT id, nome, cpf, rg, email, cel, tel, login, senha'
-      'FROM sismaster.`user`'
-      'WHERE id = :old_id')
+      
+        'SELECT id, nome, cpf, rg, email, cel, tel, login, senha, adminis' +
+        'trador'
+      'FROM ('
+      'select * from [USER]'
+      ') '
+      'WHERE id = :OLD_id')
     Left = 427
     Top = 120
   end

@@ -126,6 +126,8 @@ begin
   try
     with dtCadastros do
     begin
+      // Iniciar a transação
+      DMPrincipal.FireTransCon.StartTransaction;
       User.Insert;
 
       UserNOME.AsString := edtNome.Text;
