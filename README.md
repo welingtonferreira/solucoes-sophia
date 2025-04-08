@@ -1,77 +1,65 @@
-# Teste para Desenvolvedor Delphi – SisMaster 
+## Teste prático - SOLUCOES SOPHIA
 
-Tema: Controle Simples de Vendas de Produtos 
+Nome: ____________________________________________ Data: ____ / ____ / ____
 
-Objetivo: Avaliar as habilidades do candidato em desenvolvimento Delphi, incluindo 
-qualidade do código-fonte, criatividade na criação das telas e organização do fluxo de 
-informações. 
+Escopo do projeto
+Você deverá desenvolver uma aplicação que fará um controle de vendas para clientes.
+Este sistema deverá conter o cadastro de clientes, produtos e vendas. Desenvolva a
+aplicação com uma boa arquitetura e estrutura de projeto, que permita futuras
+expansões e manutenções. Preze pela legibilidade e organização do código.
 
-Especificações Técnicas: 
+Cadastro de cliente
+Neste cadastro serão manipulados os dados dos clientes da empresa. Informações
+necessárias:
 
- Linguagem: Delphi Alexandria 11.3 
- Banco de Dados: MySQL 5.7 
- Prazo de Entrega: 1 semana 
+? CPF, obrigatório com validação de duplicidade
+? Nome, obrigatório
+? Data nascimento
+? E-mail
+? Telefone
 
-Requisitos Funcionais: 
+Cadastro de produto
+Neste cadastro serão manipulados os dados dos produtos comercializados pela
+empresa. Informações necessárias:
 
-1. Cadastro de Produtos 
+? Nome, obrigatório com validação de duplicidade
 
-o Código do produto 
-o Nome do produto 
-o Preço unitário 
-o Estoque disponível 
+Cadastro de vendas
+É a principal funcionalidade do sistema. Deve possuir uma interface com boa
+usabilidade, pois será a ferramenta de trabalho dos operadores. A tela de vendas deve
+permiOr selecionar um cliente pelo CPF ou Nome e realizar o lançamento de diversos
+produtos em única operação. Para cada lançamento, deve exigir a seleção do produto,
+seu valor unitário e a quanOdade de itens. Por fim, deve apresentar totalizadores por
+item e por venda.
+Informações necessárias:
 
-2. Cadastro de Clientes 
+? Um idenOficador da venda;
+? Data da venda, sugestão da data do dia;
+? CPF e Nome do cliente;
+? Relação dos produtos, suas respecOvas quanOdades e preços;
+? Totalização da venda.
 
-o Código do cliente 
-o Nome completo 
-o CPF/CNPJ 
-o Telefone e e-mail 
-o Endereço completo 
+Teste práOco
 
-3. Registro de Vendas 
+Nome: ____________________________________________ Data: ____ / ____ / ____
 
-o Número da venda 
-o Cliente 
-o Data da venda 
-o Lista de produtos vendidos (produto, quantidade, valor unitário, subtotal) 
-o Total da venda 
+Delphi
+? O banco de dados a ser uOlizado é o SQL Server e o desenvolvimento deve ser
+realizado no Delphi 6 ou superior;
+? Você deve uOlizar chaves primárias, estrangeiras, índices, campos obrigatórios e
+normalização;
+? Não é permiOdo uOlizar o componente TTable ou similares, use TQuery,
+TADOQuery ou similares;
+? UOlize preferencialmente componentes dataware, tal como TDBEdit,
+TDBRadioGroup, etc;
+? UOlize DataModules para colocar os componentes de acesso a banco de dados;
+? Crie sua aplicação uOlizando preferencialmente a arquitetura 3-Oer (três
+camadas), usando Datasnap / Midas;
+? UOlize sua criaOvidade para criar uma interface simples e agradável para o
+usuário.
 
-4. Relatórios 
+Não uOlize somente scaffolding (geradores de código e interface)! Queremos avaliar o
+código que você é capaz de produzir, o sistema em si é apenas um meio de mostrar
+seus conhecimentos.
 
-o Listagem de vendas filtradas por período e cliente 
-o Listagem de produtos mais vendidos 
-
-5. Regras de Negócio 
-
-o Não permitir venda de produtos sem estoque 
-o Atualizar estoque automaticamente após a venda 
-o Validar CPF/CNPJ no cadastro de clientes 
-
-Critérios de Avaliação: 
-
-1. Código Limpo e Organizado 
-o Estrutura bem definida e comentada 
-o Uso de boas práticas de programação 
-
-2. Criatividade na Interface 
-
-o Layout intuitivo e amigável 
-o Uso adequado de componentes visuais 
-
-3. Fluxo de Informações Bem Estruturado 
-
-o Navegação clara entre telas 
-o Processos bem definidos 
-
-4. Uso de Recursos Extras (diferencial) 
-
-o Implementação de relatórios PDF 
-o Uso de gráficos 
-o Tela de login e controle de usuários 
-
-Entrega do Projeto: O candidato deverá enviar o código-fonte completo, juntamente 
-com um script SQL para a criação do banco de dados, além de um manual simples 
-explicando como configurar e executar o sistema. 
-
-Boa sorte!
+Envie o script completo de criação do banco
